@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  username: {
+  firstName: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 30
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true
   },
   email: {
     type: String,
@@ -20,16 +22,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6
-  },
-  firstName: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true
   },
   role: {
     type: String,
@@ -64,6 +56,6 @@ userSchema.methods.toJSON = function() {
   return user;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema, 'user_registration');
 
 export default User; 

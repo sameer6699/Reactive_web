@@ -156,4 +156,107 @@ The API includes comprehensive error handling for:
 
 ## 📄 License
 
-This project is part of the Reactive Web Marketplace. 
+This project is part of the Reactive Web Marketplace.
+
+## User Registration
+
+The user registration system stores user data in the `user_registration` collection in MongoDB with the following fields:
+
+- **firstName** (required): User's first name
+- **lastName** (required): User's last name  
+- **email** (required, unique): User's email address
+- **password** (required, min 6 characters): User's password
+- **role** (optional): User role (default: 'user')
+- **isActive** (optional): Account status (default: true)
+- **createdAt** (auto-generated): Registration timestamp
+- **updatedAt** (auto-generated): Last update timestamp
+
+## Setup Instructions
+
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Environment Configuration**
+   - Copy `env.example` to `.env`
+   - Update the MongoDB URI if needed:
+     ```
+     MONGODB_URI=mongodb://localhost:27017/Reactive_Web_Marketplace
+     ```
+
+3. **Start MongoDB**
+   - Ensure MongoDB is running on your system
+   - The default connection is to `mongodb://localhost:27017/Reactive_Web_Marketplace`
+
+4. **Start the Server**
+   ```bash
+   # Development mode with auto-restart
+   npm run dev:server
+   
+   # Production mode
+   npm run server
+   ```
+
+5. **Test Database Connection**
+   ```bash
+   npm run test:db
+   ```
+
+## API Endpoints
+
+### User Registration
+- **POST** `/api/users` - Register a new user
+  - Body: `{ firstName, lastName, email, password }`
+  - Returns: User data (without password)
+
+### User Management
+- **GET** `/api/users` - Get all users (Admin only)
+- **GET** `/api/users/:id` - Get single user
+- **PUT** `/api/users/:id` - Update user
+- **DELETE** `/api/users/:id` - Delete user
+
+### Health Check
+- **GET** `/api/health` - Server health status
+
+## Frontend Integration
+
+The frontend SignupPage component is configured to:
+1. Validate form data (required fields, password match, terms agreement)
+2. Send POST request to `http://localhost:5000/api/users`
+3. Handle success/error responses
+4. Navigate to login page on successful registration
+5. Display error messages for validation failures
+
+## Testing
+
+1. **Database Test**
+   ```bash
+   npm run test:db
+   ```
+
+2. **Manual API Test**
+   ```bash
+   curl -X POST http://localhost:5000/api/users \
+     -H "Content-Type: application/json" \
+     -d '{
+       "firstName": "John",
+       "lastName": "Doe", 
+       "email": "john@example.com",
+       "password": "password123"
+     }'
+   ```
+
+## Security Notes
+
+- Passwords are currently stored in plain text (should be hashed in production)
+- CORS is enabled for development (configure properly for production)
+- Input validation is implemented on both frontend and backend
+- Email uniqueness is enforced at the database level
+
+## Development
+
+- Server runs on port 5000 by default
+- MongoDB connection is established on server startup
+- Error handling middleware is configured
+- Logging is enabled for development 

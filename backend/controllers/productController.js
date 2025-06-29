@@ -20,7 +20,7 @@ export const getProducts = async (req, res) => {
     
     // Execute query with pagination
     const products = await Product.find(query)
-      .populate('seller', 'username firstName lastName')
+      .populate('seller', 'firstName lastName email')
       .sort(sort)
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -52,7 +52,7 @@ export const getProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-      .populate('seller', 'username firstName lastName');
+      .populate('seller', 'firstName lastName email');
     
     if (!product) {
       return res.status(404).json({
@@ -145,7 +145,7 @@ export const updateProduct = async (req, res) => {
         isFeatured
       },
       { new: true, runValidators: true }
-    ).populate('seller', 'username firstName lastName');
+    ).populate('seller', 'firstName lastName email');
     
     if (!product) {
       return res.status(404).json({
@@ -204,7 +204,7 @@ export const getFeaturedProducts = async (req, res) => {
       isActive: true, 
       isFeatured: true 
     })
-    .populate('seller', 'username firstName lastName')
+    .populate('seller', 'firstName lastName email')
     .sort('-rating.average')
     .limit(6);
     

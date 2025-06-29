@@ -13,15 +13,22 @@ const testDatabase = async () => {
     
     // Test creating a user
     const testUser = await User.create({
-      username: 'testuser',
-      email: 'test@example.com',
-      password: 'password123',
       firstName: 'Test',
       lastName: 'User',
-      role: 'seller'
+      email: 'test@example.com',
+      password: 'password123',
+      role: 'user'
     });
     
-    console.log('✅ Test user created:', testUser.username);
+    console.log('✅ Test user created:', testUser.fullName);
+    console.log('📋 User data:', {
+      id: testUser._id,
+      firstName: testUser.firstName,
+      lastName: testUser.lastName,
+      email: testUser.email,
+      fullName: testUser.fullName,
+      collection: testUser.collection.name
+    });
     
     console.log('\n📦 Testing Product Model...');
     
@@ -43,10 +50,10 @@ const testDatabase = async () => {
     
     // Test finding users
     const users = await User.find({}).select('-password');
-    console.log(`✅ Found ${users.length} users`);
+    console.log(`✅ Found ${users.length} users in collection: ${User.collection.name}`);
     
     // Test finding products with populated seller
-    const products = await Product.find({}).populate('seller', 'username firstName lastName');
+    const products = await Product.find({}).populate('seller', 'firstName lastName email');
     console.log(`✅ Found ${products.length} products`);
     
     console.log('\n🧹 Cleaning up test data...');

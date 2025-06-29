@@ -48,40 +48,53 @@ export const getUser = async (req, res) => {
   }
 };
 
-// @desc    Create user
+// @desc    Create user (Signup)
 // @route   POST /api/users
 // @access  Public
 export const createUser = async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName, role } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     
-    // Check if user already exists
-    const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
-    });
+    // Validate required fields
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields: firstName, lastName, email, and password'
+      });
+    }
+    
+    // Check if user already exists with this email
+    const existingUser = await User.findOne({ email });
     
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email or username already exists'
+        message: 'User with this email already exists'
       });
     }
     
+    // Create new user
     const user = await User.create({
-      username,
-      email,
-      password, // Note: In production, hash the password
       firstName,
       lastName,
-      role
+      email,
+      password // Note: In production, hash the password before saving
     });
     
     res.status(201).json({
       success: true,
-      message: 'User created successfully',
-      data: user
+      message: 'User registered successfully',
+      data: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        fullName: user.fullName,
+        createdAt: user.createdAt
+      }
     });
   } catch (error) {
+    console.error('User registration error:', error);
     res.status(500).json({
       success: false,
       message: 'Server Error',
@@ -95,12 +108,11 @@ export const createUser = async (req, res) => {
 // @access  Private
 export const updateUser = async (req, res) => {
   try {
-    const { username, email, firstName, lastName, role, isActive } = req.body;
+    const { email, firstName, lastName, role, isActive } = req.body;
     
     const user = await User.findByIdAndUpdate(
       req.params.id,
       {
-        username,
         email,
         firstName,
         lastName,
