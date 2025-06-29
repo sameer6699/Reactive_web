@@ -8,7 +8,7 @@ import { useStore } from '../../store/useStore';
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isDark, toggleDarkMode } = useDarkMode();
-  const { user, setSignupModalOpen } = useStore();
+  const { user } = useStore();
   const navigate = useNavigate();
 
   const navItems = [
@@ -21,6 +21,10 @@ const Header: React.FC = () => {
 
   const handleLoginClick = () => {
     navigate('/login');
+  };
+
+  const handleSignupClick = () => {
+    navigate('/signup');
   };
 
   return (
@@ -100,7 +104,7 @@ const Header: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSignupModalOpen(true)}
+                  onClick={handleSignupClick}
                   className="flex items-center space-x-2 px-4 py-2 bg-secondary-500 hover:bg-secondary-600 text-white rounded-lg font-medium transition-colors duration-200"
                 >
                   <span className="hidden md:block">Signup</span>
@@ -157,7 +161,7 @@ const Header: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
-                      setSignupModalOpen(true);
+                      handleSignupClick();
                       setIsMobileMenuOpen(false);
                     }}
                     className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-secondary-500 hover:bg-secondary-600 text-white rounded-lg font-medium transition-colors duration-200"

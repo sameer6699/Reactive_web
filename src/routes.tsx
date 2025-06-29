@@ -8,6 +8,7 @@ import BenefitsSection from './components/home/BenefitsSection';
 import TestimonialsSection from './components/home/TestimonialsSection';
 import HowItWorks from './components/home/HowItWorks';
 import LoginPage from './components/auth/LoginPage';
+import SignupPage from './components/auth/SignupPage';
 
 // Home page component
 const HomePage: React.FC = () => {
@@ -44,6 +45,10 @@ export const routes: RouteObject[] = [
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />,
   },
   // Add more routes here as needed
   // {

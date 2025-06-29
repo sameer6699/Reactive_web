@@ -1,8 +1,15 @@
 import React from 'react';
-import { Code, Palette, Zap, Shield, Users, Headphones } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Code, Palette, Zap, Shield, Users, Headphones, ArrowRight, UserPlus } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const BenefitsSection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSignupClick = () => {
+    navigate('/signup');
+  };
+
   const benefits = [
     {
       icon: Code,
@@ -152,6 +159,73 @@ const BenefitsSection: React.FC = () => {
               </div>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Signup CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="mt-20 text-center"
+        >
+          <div className="bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 rounded-3xl p-12 relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+              }}
+            ></div>
+            
+            <div className="relative z-10">
+              <motion.h3 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                viewport={{ once: true }}
+                className="text-3xl md:text-4xl font-bold text-white mb-4"
+              >
+                Ready to Start Building?
+              </motion.h3>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                viewport={{ once: true }}
+                className="text-xl text-white/90 mb-8 max-w-2xl mx-auto"
+              >
+                Join thousands of developers and designers creating amazing web experiences. 
+                Get started with our premium templates today!
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
+                viewport={{ once: true }}
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSignupClick}
+                  className="group inline-flex items-center px-8 py-4 bg-white text-primary-600 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <UserPlus className="mr-2 w-5 h-5" />
+                  Create Free Account
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300"
+                >
+                  Browse Templates
+                </motion.button>
+              </motion.div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>

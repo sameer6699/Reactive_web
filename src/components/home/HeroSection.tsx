@@ -1,8 +1,15 @@
 import React from 'react';
-import { ArrowRight, Play, Star, Download } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Play, Star, Download, UserPlus } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSignupClick = () => {
+    navigate('/signup');
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-purple-900">
       {/* Background Elements */}
@@ -67,9 +74,11 @@ const HeroSection: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleSignupClick}
                 className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Browse Templates
+                <UserPlus className="mr-2 w-5 h-5" />
+                Get Started Free
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
               </motion.button>
               
