@@ -161,7 +161,9 @@ export const loginUser = async (req, res) => {
         email: user.email,
         fullName: user.fullName,
         role: user.role,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        onboardingComplete: user.onboardingComplete,
+        occupation: user.occupation
       }
     });
   } catch (error) {
@@ -206,6 +208,52 @@ export const updateUser = async (req, res) => {
       data: user
     });
   } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server Error',
+      error: error.message
+    });
+  }
+};
+
+// @desc    Update user onboarding information
+// @route   PATCH /api/users/:id/onboarding
+// @access  Private
+export const updateUserOnboarding = async (req, res) => {
+  try {
+    const onboardingData = req.body;
+
+    // A simple validation to ensure we have some data
+    if (Object.keys(onboardingData).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide onboarding data'
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        ...onboardingData,
+        onboardingComplete: true,
+        updatedAt: Date.now()
+      },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    console.error('Error in updateUserOnboarding:', error);
     res.status(500).json({
       success: false,
       message: 'Server Error',

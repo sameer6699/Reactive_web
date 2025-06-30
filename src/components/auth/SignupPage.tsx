@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Star } from 'lucide-react';
 import SuccessModal from '../global/SuccessModal';
+import logo from '../img/typo-logo.png';
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -139,9 +140,9 @@ const SignupPage: React.FC = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="mx-auto w-14 h-14 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center mb-4"
+                className="mx-auto w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-4 p-2"
               >
-                <span className="text-white font-bold text-xl">R</span>
+                <img src={logo} alt="Logo" className="h-full w-full object-contain" />
               </motion.div>
               <motion.h2 
                 initial={{ opacity: 0, y: 20 }}

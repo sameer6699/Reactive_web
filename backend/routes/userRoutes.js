@@ -5,7 +5,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  loginUser
+  loginUser,
+  updateUserOnboarding
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -34,6 +35,11 @@ router.post('/login', loginUser);
 // @desc    Update user
 // @access  Private
 router.put('/:id', updateUser);
+
+// @route   PATCH /api/users/:id/onboarding
+// @desc    Update user onboarding info
+// @access  Private
+router.patch('/:id/onboarding', updateUserOnboarding);
 
 // @route   DELETE /api/users/:id
 // @desc    Delete user

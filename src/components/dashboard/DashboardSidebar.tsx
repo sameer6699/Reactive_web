@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../img/typo-logo.png';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -8,12 +9,9 @@ import {
   LogOut, 
   ChevronLeft, 
   ChevronRight,
-  Home,
   ShoppingCart,
   BarChart3,
   Bell,
-  Search,
-  Menu,
   Grid,
   Layers
 } from 'lucide-react';
@@ -118,10 +116,10 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
               transition={{ duration: 0.2 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">R</span>
+              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center p-1">
+                <img src={logo} alt="Logo" className="h-full w-full object-contain" />
               </div>
-              <span className="text-lg font-semibold text-gray-900 dark:text-white">Reactive</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">PixelForge</span>
             </motion.div>
           ) : (
             <motion.div
@@ -130,9 +128,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center absolute -left-3 top-4"
+              className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center absolute -left-3 top-4 p-1"
             >
-              <span className="text-white font-bold text-sm">R</span>
+              <img src={logo} alt="Logo" className="h-full w-full object-contain" />
             </motion.div>
           )}
         </AnimatePresence>
