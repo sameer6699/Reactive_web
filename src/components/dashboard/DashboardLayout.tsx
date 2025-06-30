@@ -24,10 +24,7 @@ const DashboardLayout: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <DashboardHeader 
-          onSidebarToggle={toggleSidebar}
-          isSidebarCollapsed={isSidebarCollapsed}
-        />
+        <DashboardHeader />
 
         {/* Content */}
         <div className="flex-1 overflow-auto">

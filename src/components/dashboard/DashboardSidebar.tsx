@@ -13,7 +13,9 @@ import {
   BarChart3,
   Bell,
   Search,
-  Menu
+  Menu,
+  Grid,
+  Layers
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,6 +73,22 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
     }
   ];
 
+  // Marketplace section items
+  const marketplaceItems = [
+    {
+      id: 'marketplace-templates',
+      label: 'New Templates',
+      icon: <Grid className="w-5 h-5" />,
+      path: '/dashboard/marketplace/templates'
+    },
+    {
+      id: 'marketplace-themes',
+      label: 'Themes',
+      icon: <Layers className="w-5 h-5" />,
+      path: '/dashboard/marketplace/themes'
+    }
+  ];
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/');
@@ -89,7 +107,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
       className="h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 shadow-lg relative"
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className={`p-4 border-b border-gray-200 dark:border-gray-700 relative ${isCollapsed ? 'flex flex-col items-center gap-2' : 'flex items-center justify-between'}`}>
         <AnimatePresence mode="wait">
           {!isCollapsed ? (
             <motion.div
@@ -112,28 +130,95 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center mx-auto"
+              className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center absolute -left-3 top-4"
             >
               <span className="text-white font-bold text-sm">R</span>
             </motion.div>
           )}
         </AnimatePresence>
-
         <button
           onClick={onToggle}
-          className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 shadow-md hover:from-secondary-500 hover:to-primary-500 transition-all duration-200"
         >
           {isCollapsed ? (
-            <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <ChevronRight className="w-4 h-4 text-white" />
           ) : (
-            <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            <ChevronLeft className="w-4 h-4 text-white" />
           )}
         </button>
       </div>
 
       {/* Navigation Menu */}
       <nav className="p-4 space-y-2">
-        {menuItems.map((item) => (
+        {/* Dashboard item first */}
+        {menuItems.slice(0, 1).map((item) => (
+          <motion.button
+            key={item.id}
+            onClick={() => handleItemClick(item.id, item.path)}
+            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+              activeItem === item.id
+                ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+            }`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className={`flex-shrink-0 ${activeItem === item.id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}`}>
+              {item.icon}
+            </div>
+            <AnimatePresence mode="wait">
+              {!isCollapsed && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="font-medium text-sm"
+                >
+                  {item.label}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        ))}
+        {/* Marketplace Section next */}
+        <div className="pt-4">
+          {!isCollapsed && (
+            <div className="px-3 pb-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Marketplace</div>
+          )}
+          {marketplaceItems.map((item) => (
+            <motion.button
+              key={item.id}
+              onClick={() => handleItemClick(item.id, item.path)}
+              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                activeItem === item.id
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className={`flex-shrink-0 ${activeItem === item.id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}`}>
+                {item.icon}
+              </div>
+              <AnimatePresence mode="wait">
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="font-medium text-sm"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          ))}
+        </div>
+        {/* The rest of the menu items */}
+        {menuItems.slice(1).map((item) => (
           <motion.button
             key={item.id}
             onClick={() => handleItemClick(item.id, item.path)}
