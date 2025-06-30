@@ -4,6 +4,7 @@ import DashboardSidebar from './DashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardContent from './DashboardContent';
 import { useHydrateUser } from '../../store/useStore';
+import MarketplaceTemplates from './MarketplaceTemplates';
 
 const DashboardLayout: React.FC = () => {
   useHydrateUser();
@@ -36,6 +37,7 @@ const DashboardLayout: React.FC = () => {
             <Route path="/notifications" element={<div className="p-6"><h1 className="text-2xl font-bold">Notifications</h1></div>} />
             <Route path="/profile" element={<div className="p-6"><h1 className="text-2xl font-bold">Profile</h1></div>} />
             <Route path="/settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1></div>} />
+            <Route path="/marketplace/templates" element={<MarketplaceTemplates />} />
           </Routes>
         </div>
       </div>

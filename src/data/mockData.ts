@@ -96,6 +96,147 @@ export const mockTemplates: Template[] = [
     createdAt: '2024-01-25',
     isFeatured: false,
     isPremium: false
+  },
+  {
+    id: '5',
+    title: 'Minimal Blog Template',
+    description: 'A clean and minimal blog template for writers and content creators.',
+    price: 29,
+    category: 'Blog',
+    tags: ['Blog', 'Minimal', 'Content'],
+    techStack: ['React', 'TypeScript', 'Tailwind CSS'],
+    thumbnail: 'https://images.pexels.com/photos/261628/pexels-photo-261628.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/261628/pexels-photo-261628.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.5,
+    reviewCount: 45,
+    downloadCount: 320,
+    author: {
+      name: 'Linda Park',
+      avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-01',
+    isFeatured: false,
+    isPremium: false
+  },
+  {
+    id: '6',
+    title: 'Agency Portfolio',
+    description: 'A modern portfolio template for agencies and freelancers.',
+    price: 55,
+    originalPrice: 75,
+    category: 'Agency',
+    tags: ['Agency', 'Portfolio', 'Modern'],
+    techStack: ['React', 'Next.js', 'Tailwind CSS'],
+    thumbnail: 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.8,
+    reviewCount: 67,
+    downloadCount: 540,
+    author: {
+      name: 'Carlos Rivera',
+      avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-10',
+    isFeatured: true,
+    isPremium: true
+  },
+  {
+    id: '7',
+    title: 'Startup Landing',
+    description: 'A vibrant landing page template for startups and new products.',
+    price: 39,
+    category: 'Landing Page',
+    tags: ['Startup', 'Landing', 'Vibrant'],
+    techStack: ['Vue', 'Tailwind CSS'],
+    thumbnail: 'https://images.pexels.com/photos/2102416/pexels-photo-2102416.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/2102416/pexels-photo-2102416.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.3,
+    reviewCount: 32,
+    downloadCount: 210,
+    author: {
+      name: 'Priya Singh',
+      avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-15',
+    isFeatured: false,
+    isPremium: false
+  },
+  {
+    id: '8',
+    title: 'E-commerce Storefront',
+    description: 'A robust e-commerce storefront template with product grid and checkout.',
+    price: 99,
+    originalPrice: 149,
+    category: 'E-commerce',
+    tags: ['E-commerce', 'Storefront', 'Checkout'],
+    techStack: ['React', 'Redux', 'Bootstrap'],
+    thumbnail: 'https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.9,
+    reviewCount: 102,
+    downloadCount: 1100,
+    author: {
+      name: 'Olga Petrova',
+      avatar: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-20',
+    isFeatured: true,
+    isPremium: true
+  },
+  {
+    id: '9',
+    title: 'Personal Resume',
+    description: 'A sleek resume template for professionals and job seekers.',
+    price: 19,
+    category: 'Portfolio',
+    tags: ['Resume', 'Personal', 'Professional'],
+    techStack: ['Angular', 'Bootstrap'],
+    thumbnail: 'https://images.pexels.com/photos/113850/pexels-photo-113850.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/113850/pexels-photo-113850.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.2,
+    reviewCount: 21,
+    downloadCount: 150,
+    author: {
+      name: 'Tom Becker',
+      avatar: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-22',
+    isFeatured: false,
+    isPremium: false
+  },
+  {
+    id: '10',
+    title: 'Creative Agency Kit',
+    description: 'A creative UI kit for agencies with multiple page layouts and components.',
+    price: 79,
+    originalPrice: 99,
+    category: 'Agency',
+    tags: ['Agency', 'Creative', 'UI Kit'],
+    techStack: ['React', 'TypeScript', 'Framer Motion'],
+    thumbnail: 'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=800',
+    previewImages: [
+      'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    ],
+    rating: 4.7,
+    reviewCount: 58,
+    downloadCount: 470,
+    author: {
+      name: 'Sophia Lee',
+      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150'
+    },
+    createdAt: '2024-02-25',
+    isFeatured: true,
+    isPremium: true
   }
 ];
 
