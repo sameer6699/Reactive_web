@@ -4,7 +4,7 @@ import { mockTemplates } from '../../data/mockData';
 const MarketplaceTemplates: React.FC = () => {
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">All Templates</h1>
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">All Templates</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {mockTemplates.map(template => (
           <div

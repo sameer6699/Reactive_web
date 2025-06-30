@@ -6,6 +6,7 @@ interface Store {
   // User state
   user: User | null;
   setUser: (user: User | null) => void;
+  logout: () => void;
   
   // Cart state
   cart: CartItem[];
@@ -32,6 +33,7 @@ export const useStore = create<Store>((set, get) => ({
   // User state
   user: null,
   setUser: (user) => set({ user }),
+  logout: () => set({ user: null, cart: [] }),
   
   // Cart state
   cart: [],
