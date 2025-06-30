@@ -4,7 +4,8 @@ import {
   getUser,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  loginUser
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -23,6 +24,11 @@ router.get('/:id', getUser);
 // @desc    Create user
 // @access  Public
 router.post('/', createUser);
+
+// @route   POST /api/users/login
+// @desc    Login user
+// @access  Public
+router.post('/login', loginUser);
 
 // @route   PUT /api/users/:id
 // @desc    Update user

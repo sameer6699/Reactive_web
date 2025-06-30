@@ -11,14 +11,14 @@ const connectDB = async () => {
       useNewUrlParser: true,
     });
 
-    console.log(`✅ MongoDB Connected Successfully!`);
-    console.log(`📊 Database: ${conn.connection.name}`);
-    console.log(`🌐 Host: ${conn.connection.host}`);
-    console.log(`🔌 Port: ${conn.connection.port}`);
+    console.log(`MongoDB Connected Successfully!`);
+    console.log(`Database: ${conn.connection.name}`);
+    console.log(`Host: ${conn.connection.host}`);
+    console.log(`Port: ${conn.connection.port}`);
     
     return conn;
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error.message);
+    console.error('MongoDB connection error:', error.message);
     process.exit(1);
   }
 };

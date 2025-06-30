@@ -9,6 +9,8 @@ import TestimonialsSection from './components/home/TestimonialsSection';
 import HowItWorks from './components/home/HowItWorks';
 import LoginPage from './components/auth/LoginPage';
 import SignupPage from './components/auth/SignupPage';
+import Dashboard from './components/dashboard/Dashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Home page component
 const HomePage: React.FC = () => {
@@ -50,11 +52,11 @@ export const routes: RouteObject[] = [
     path: '/signup',
     element: <SignupPage />,
   },
+  {
+    path: '/dashboard/*',
+    element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
+  },
   // Add more routes here as needed
-  // {
-  //   path: '/dashboard',
-  //   element: <MainLayout><Dashboard /></MainLayout>,
-  // },
   // {
   //   path: '/profile',
   //   element: <MainLayout><Profile /></MainLayout>,
