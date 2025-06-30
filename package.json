@@ -13,6 +13,7 @@
     "test:db": "node backend/test-db.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
