@@ -70,6 +70,10 @@ const ProfilePage: React.FC = () => {
     },
   ];
 
+  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [currentSocial, setCurrentSocial] = useState<string | null>(null);
+  const [socialLink, setSocialLink] = useState('');
+
   useEffect(() => {
     if (activeTab === 'notifications' && 'Notification' in window) {
       setNotificationStatus(Notification.permission);
@@ -471,7 +475,7 @@ const ProfilePage: React.FC = () => {
                               <img src={twitterLogo} alt="Twitter" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
                             connected: true,
-                            action: 'delete',
+                            action: 'link',
                           },
                           {
                             name: 'Instagram',
@@ -480,7 +484,7 @@ const ProfilePage: React.FC = () => {
                               <img src={instaLogo} alt="Instagram" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
                             connected: true,
-                            action: 'delete',
+                            action: 'link',
                           },
                           {
                             name: 'Dribbble',
@@ -509,22 +513,62 @@ const ProfilePage: React.FC = () => {
                                 <div className={`text-xs ${acc.connected ? 'text-indigo-600' : 'text-gray-500'}`}>{acc.status}</div>
                               </div>
                             </div>
-                            {/* Action Button */}
-                            {acc.action === 'link' ? (
-                              <button className="p-2 rounded border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 1 7 7l-1.5 1.5a5 5 0 0 1-7-7l1.5-1.5"/><path d="M14 11a5 5 0 0 0-7-7L5.5 5.5a5 5 0 0 0 7 7l1.5-1.5"/></svg>
-                              </button>
-                            ) : (
-                              <button className="p-2 rounded border border-red-200 hover:bg-red-50">
-                                <svg className="h-5 w-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0 1 16.138 21H7.862a2 2 0 0 1-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
-                              </button>
-                            )}
+                            {/* Action Button: always show link icon for all accounts */}
+                            <button
+                              className="p-2 rounded border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                              onClick={() => {
+                                setCurrentSocial(acc.name);
+                                setShowSocialModal(true);
+                              }}
+                            >
+                              <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 1 7 7l-1.5 1.5a5 5 0 0 1-7-7l1.5-1.5"/><path d="M14 11a5 5 0 0 0-7-7L5.5 5.5a5 5 0 0 0 7 7l1.5-1.5"/></svg>
+                            </button>
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 </div>
+                {/* Social Link Modal */}
+                {showSocialModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+                      <h2 className="text-lg font-semibold mb-4">
+                        Enter your {currentSocial} link
+                      </h2>
+                      <input
+                        type="text"
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 mb-4"
+                        placeholder={`Paste your ${currentSocial} profile link here`}
+                        value={socialLink}
+                        onChange={e => setSocialLink(e.target.value)}
+                      />
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                          onClick={() => {
+                            setShowSocialModal(false);
+                            setCurrentSocial(null);
+                            setSocialLink('');
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="px-4 py-2 rounded bg-indigo-600 text-white"
+                          onClick={() => {
+                            // Handle saving the link here
+                            setShowSocialModal(false);
+                            setCurrentSocial(null);
+                            setSocialLink('');
+                          }}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
