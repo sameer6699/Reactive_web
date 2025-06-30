@@ -3,19 +3,42 @@ import { Routes, Route } from 'react-router-dom';
 import DashboardSidebar from './DashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardContent from './DashboardContent';
-import { useHydrateUser } from '../../store/useStore';
+import { useHydrateUser, useStore } from '../../store/useStore';
 import MarketplaceTemplates from './MarketplaceTemplates';
+import OnboardingModal from './OnboardingModal';
+import { useState, useEffect } from 'react';
 
 const DashboardLayout: React.FC = () => {
   useHydrateUser();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
+  const { user, updateUserOnboardingInfo } = useStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user && !user.onboardingComplete) {
+      setIsModalOpen(true);
+    }
+  }, [user]);
+
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  const handleOnboardingSubmit = async (data: object) => {
+    if (user && user.id) {
+      await updateUserOnboardingInfo(user.id, data);
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
+      <OnboardingModal
+        isOpen={isModalOpen}
+        onSubmit={handleOnboardingSubmit}
+        username={user?.firstName || 'there'}
+      />
       {/* Sidebar */}
       <DashboardSidebar 
         isCollapsed={isSidebarCollapsed} 

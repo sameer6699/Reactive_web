@@ -31,6 +31,15 @@ export interface User {
   purchasedTemplates: string[];
   firstName?: string;
   lastName?: string;
+  onboardingComplete?: boolean;
+  userType?: 'developer' | 'designer' | 'startup-founder' | 'business-owner' | 'freelancer' | 'agency' | 'other';
+  userTypeOther?: string;
+  primaryGoal?: 'buy' | 'sell' | 'both' | 'exploring';
+  skillLevel?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  targetPlatforms?: string[];
+  templateInterests?: string[];
+  preferredTheme?: 'light' | 'dark' | 'both' | 'no-preference';
+  designStyle?: 'minimalist' | 'creative' | 'corporate' | 'modern';
 }
 
 export interface CartItem {

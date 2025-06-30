@@ -7,6 +7,7 @@ interface Store {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => void;
+  updateUserOnboardingInfo: (userId: string, data: object) => Promise<void>;
   
   // Cart state
   cart: CartItem[];
@@ -33,7 +34,35 @@ export const useStore = create<Store>((set, get) => ({
   // User state
   user: null,
   setUser: (user) => set({ user }),
-  logout: () => set({ user: null, cart: [] }),
+  logout: () => {
+    localStorage.removeItem('user');
+    set({ user: null, cart: [] });
+  },
+  updateUserOnboardingInfo: async (userId, data) => {
+    try {
+      const response = await fetch(`/api/users/${userId}/onboarding`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Failed to update user onboarding info. Server response:", errorData);
+        throw new Error('Failed to update user onboarding info');
+      }
+
+      const updatedUser = await response.json();
+      
+      set({ user: updatedUser.data });
+      localStorage.setItem('user', JSON.stringify(updatedUser.data));
+
+    } catch (error) {
+      console.error("Error updating user onboarding info:", error);
+    }
+  },
   
   // Cart state
   cart: [],
@@ -75,9 +104,17 @@ export const useHydrateUser = () => {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
-        setUser(JSON.parse(userStr));
+        const userData = JSON.parse(userStr);
+        // Ensure user object has all required fields before setting
+        if (userData && userData.id) {
+          setUser(userData);
+        } else {
+          setUser(null);
+          localStorage.removeItem('user');
+        }
       } catch {
         setUser(null);
+        localStorage.removeItem('user');
       }
     }
   }, [setUser]);
