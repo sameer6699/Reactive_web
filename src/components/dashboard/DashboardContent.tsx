@@ -10,8 +10,10 @@ import {
   Eye,
   Download
 } from 'lucide-react';
+import { useStore } from '../../store/useStore';
 
 const DashboardContent: React.FC = () => {
+  const { user } = useStore();
   const stats = [
     {
       title: 'Total Revenue',
@@ -87,7 +89,9 @@ const DashboardContent: React.FC = () => {
         transition={{ duration: 0.5 }}
         className="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl p-6 text-white"
       >
-        <h1 className="text-2xl font-bold mb-2">Welcome back, John! 👋</h1>
+        <h1 className="text-2xl font-bold mb-2">
+          Welcome back, {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : (user?.name || 'User')}! 👋
+        </h1>
         <p className="text-primary-100">Here's what's happening with your account today.</p>
       </motion.div>
 

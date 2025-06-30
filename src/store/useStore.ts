@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { CartItem, User, Template } from '../types';
+import { useEffect } from 'react';
 
 interface Store {
   // User state
@@ -64,3 +65,18 @@ export const useStore = create<Store>((set, get) => ({
   isSignupModalOpen: false,
   setSignupModalOpen: (open) => set({ isSignupModalOpen: open }),
 }));
+
+// Hydrate user from localStorage on first load
+export const useHydrateUser = () => {
+  const setUser = useStore((state) => state.setUser);
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch {
+        setUser(null);
+      }
+    }
+  }, [setUser]);
+};

@@ -3,8 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import DashboardSidebar from './DashboardSidebar';
 import DashboardHeader from './DashboardHeader';
 import DashboardContent from './DashboardContent';
+import { useHydrateUser } from '../../store/useStore';
 
 const DashboardLayout: React.FC = () => {
+  useHydrateUser();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
 
   const toggleSidebar = () => {

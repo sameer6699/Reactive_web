@@ -29,6 +29,8 @@ export interface User {
   avatar: string;
   isPremium: boolean;
   purchasedTemplates: string[];
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface CartItem {

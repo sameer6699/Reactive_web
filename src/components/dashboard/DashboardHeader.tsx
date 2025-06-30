@@ -10,6 +10,7 @@ import {
   X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
 
 interface DashboardHeaderProps {
   onSidebarToggle: () => void;
@@ -18,6 +19,7 @@ interface DashboardHeaderProps {
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onSidebarToggle, isSidebarCollapsed }) => {
   const navigate = useNavigate();
+  const { user } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [notifications] = useState([
@@ -99,8 +101,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ onSidebarToggle, isSi
                 <User className="w-4 h-4 text-white" />
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">John Doe</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">john@example.com</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">{(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : (user?.name || 'User')}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'user@example.com'}</p>
               </div>
             </button>
 
