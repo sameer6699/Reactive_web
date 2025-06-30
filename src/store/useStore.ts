@@ -8,6 +8,7 @@ interface Store {
   setUser: (user: User | null) => void;
   logout: () => void;
   updateUserOnboardingInfo: (userId: string, data: object) => Promise<void>;
+  updateUserSocialLinks: (userId: string, socialLinks: object) => Promise<void>;
   
   // Cart state
   cart: CartItem[];
@@ -61,6 +62,27 @@ export const useStore = create<Store>((set, get) => ({
 
     } catch (error) {
       console.error("Error updating user onboarding info:", error);
+    }
+  },
+  updateUserSocialLinks: async (userId: string, socialLinks: object) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ socialLinks }),
+      });
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Failed to update social links. Server response:', errorData);
+        throw new Error('Failed to update social links');
+      }
+      const updatedUser = await response.json();
+      set({ user: updatedUser.data });
+      localStorage.setItem('user', JSON.stringify(updatedUser.data));
+    } catch (error) {
+      console.error('Error updating social links:', error);
     }
   },
   

@@ -67,6 +67,13 @@ const userSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  socialLinks: {
+    facebook: { type: String, default: '' },
+    twitter: { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    dribbble: { type: String, default: '' },
+    behance: { type: String, default: '' }
   }
 }, {
   timestamps: true

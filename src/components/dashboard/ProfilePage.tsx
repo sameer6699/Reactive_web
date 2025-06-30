@@ -18,7 +18,7 @@ import dribbleLogo from '../img/logo/dribble-logo.png';
 import behanceLogo from '../img/logo/behance-logo.png';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useStore();
+  const { user, updateUserSocialLinks } = useStore();
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connections'>('profile');
   const [notificationStatus, setNotificationStatus] = useState<NotificationPermission | null>(null);
 
@@ -556,8 +556,15 @@ const ProfilePage: React.FC = () => {
                         </button>
                         <button
                           className="px-4 py-2 rounded bg-indigo-600 text-white"
-                          onClick={() => {
-                            // Handle saving the link here
+                          onClick={async () => {
+                            if (user && currentSocial) {
+                              const socialKey = currentSocial.toLowerCase();
+                              const updatedLinks = {
+                                ...(user.socialLinks || {}),
+                                [socialKey]: socialLink
+                              };
+                              await updateUserSocialLinks(user.id, updatedLinks);
+                            }
                             setShowSocialModal(false);
                             setCurrentSocial(null);
                             setSocialLink('');
