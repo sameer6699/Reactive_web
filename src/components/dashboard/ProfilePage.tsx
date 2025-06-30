@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
-import { Camera, Mail, User, Building, MapPin, Globe, Clock } from 'lucide-react';
+import { Camera, Mail, User, Building, MapPin, Globe, Clock, Trash2, Link as LinkIcon, PlugZap } from 'lucide-react';
 
 // Let's assume you have an icon library like Heroicons
 import { CameraIcon } from '@heroicons/react/24/solid';
@@ -16,9 +16,10 @@ import instaLogo from '../img/logo/insta-logo.png';
 import twitterLogo from '../img/logo/twitter-logo.png';
 import dribbleLogo from '../img/logo/dribble-logo.png';
 import behanceLogo from '../img/logo/behance-logo.png';
+import './ProfilePage.css'; // For animation styles
 
 const ProfilePage: React.FC = () => {
-  const { user } = useStore();
+  const { user, updateUserSocialLinks } = useStore();
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connections'>('profile');
   const [notificationStatus, setNotificationStatus] = useState<NotificationPermission | null>(null);
 
@@ -30,6 +31,9 @@ const ProfilePage: React.FC = () => {
     Mailchimp: true,
     Asana: false,
   });
+
+  // Track disconnected state for each social
+  const [disconnected, setDisconnected] = useState<{ [key: string]: boolean }>({});
 
   // Move the connectedAccountsData array definition inside the ProfilePage component, after useState and before return.
   const connectedAccountsData = [
@@ -74,6 +78,10 @@ const ProfilePage: React.FC = () => {
   const [currentSocial, setCurrentSocial] = useState<string | null>(null);
   const [socialLink, setSocialLink] = useState('');
 
+  // State for delete confirmation modal
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
   useEffect(() => {
     if (activeTab === 'notifications' && 'Notification' in window) {
       setNotificationStatus(Notification.permission);
@@ -85,6 +93,27 @@ const ProfilePage: React.FC = () => {
       Notification.requestPermission().then((permission) => {
         setNotificationStatus(permission);
       });
+    }
+  };
+
+  // Helper to extract username from social link
+  const extractUsername = (platform: string, url: string) => {
+    if (!url) return '';
+    try {
+      const u = new URL(url.startsWith('http') ? url : 'https://' + url.replace(/^\//, ''));
+      const path = u.pathname.replace(/^\//, '').replace(/\/$/, '');
+      if (!path) return '';
+      // For most platforms, username is the first path segment
+      let username = path.split('/')[0];
+      // For Twitter, Instagram, Dribbble, Behance, Facebook, this is usually correct
+      // For Facebook, sometimes the username is in a query param (not handled here)
+      return '@' + username;
+    } catch {
+      // fallback: try to extract after last /
+      const parts = url.split('/');
+      let username = parts[parts.length - 1] || parts[parts.length - 2];
+      if (username) return '@' + username;
+      return '';
     }
   };
 
@@ -461,70 +490,115 @@ const ProfilePage: React.FC = () => {
                         {[
                           {
                             name: 'Facebook',
+                            key: 'facebook',
                             status: 'Not Connected',
                             icon: (
                               <img src={fbLogo} alt="Facebook" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
-                            connected: false,
-                            action: 'link',
                           },
                           {
                             name: 'Twitter',
-                            status: '@ThemeSelection',
+                            key: 'twitter',
+                            status: 'Not Connected',
                             icon: (
                               <img src={twitterLogo} alt="Twitter" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
-                            connected: true,
-                            action: 'link',
                           },
                           {
                             name: 'Instagram',
-                            status: '@ThemeSelection',
+                            key: 'instagram',
+                            status: 'Not Connected',
                             icon: (
                               <img src={instaLogo} alt="Instagram" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
-                            connected: true,
-                            action: 'link',
                           },
                           {
                             name: 'Dribbble',
+                            key: 'dribbble',
                             status: 'Not Connected',
                             icon: (
                               <img src={dribbleLogo} alt="Dribbble" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
-                            connected: false,
-                            action: 'link',
                           },
                           {
                             name: 'Behance',
+                            key: 'behance',
                             status: 'Not Connected',
                             icon: (
                               <img src={behanceLogo} alt="Behance" className="h-8 w-8 object-contain rounded-full bg-white p-1 mr-3" />
                             ),
-                            connected: false,
-                            action: 'link',
                           },
-                        ].map((acc, idx) => (
-                          <div key={acc.name} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                        ].map((acc, idx) => {
+                          const link = user?.socialLinks?.[acc.key as keyof typeof user.socialLinks];
+                          const username = link ? extractUsername(acc.key, link) : '';
+                          const isDisconnected = !!disconnected[acc.key];
+                          const CardContent = (
                             <div className="flex items-center">
                               {acc.icon}
                               <div>
                                 <div className="font-medium text-gray-900 dark:text-gray-100">{acc.name}</div>
-                                <div className={`text-xs ${acc.connected ? 'text-indigo-600' : 'text-gray-500'}`}>{acc.status}</div>
+                                <div className={`text-xs ${isDisconnected ? 'text-yellow-600' : link ? 'text-indigo-600' : acc.status === 'Not Connected' ? 'text-red-600' : 'text-gray-500'}`}>
+                                  {isDisconnected
+                                    ? 'Disconnected'
+                                    : link
+                                      ? (username || link)
+                                      : acc.status}
+                                </div>
                               </div>
                             </div>
-                            {/* Action Button: always show link icon for all accounts */}
-                            <button
-                              className="p-2 rounded border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                              onClick={() => {
-                                setCurrentSocial(acc.name);
-                                setShowSocialModal(true);
-                              }}
-                            >
-                              <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 1 7 7l-1.5 1.5a5 5 0 0 1-7-7l1.5-1.5"/><path d="M14 11a5 5 0 0 0-7-7L5.5 5.5a5 5 0 0 0 7 7l1.5-1.5"/></svg>
-                            </button>
+                          );
+                          return (
+                            link ? (
+                              <div key={acc.name} className="flex items-center">
+                                <div
+                                  className={`flex-1 flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition ${!isDisconnected ? 'hover:bg-indigo-50 dark:hover:bg-indigo-900 cursor-pointer' : 'opacity-80'}`}
+                                  onClick={!isDisconnected ? () => window.open(link, '_blank', 'noopener,noreferrer') : undefined}
+                                  style={{ textAlign: 'left' }}
+                                >
+                                  {CardContent}
+                                  <button
+                                    className="p-2 rounded border border-yellow-200 hover:bg-yellow-50 ml-3"
+                                    title={isDisconnected ? "Reconnect" : "Disconnect"}
+                                    onClick={e => {
+                                      e.stopPropagation();
+                                      setDisconnected(prev => ({ ...prev, [acc.key]: !prev[acc.key] }));
+                                    }}
+                                  >
+                                    <img
+                                      src={isDisconnected ? "https://img.icons8.com/ios/50/disconnected.png" : "https://img.icons8.com/ios/50/connected.png"}
+                                      alt={isDisconnected ? "disconnected" : "connected"}
+                                      className={`h-5 w-5 transition-transform duration-300 ${isDisconnected ? 'animate-disconnect' : 'animate-connect'}`}
+                                    />
+                                  </button>
+                                </div>
+                                <button
+                                  className="p-2 rounded border border-red-200 hover:bg-red-50 ml-4"
+                                  style={{ marginLeft: '12px' }}
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    setPendingDelete(acc.key);
+                                    setShowDeleteModal(true);
+                                  }}
+                                >
+                                  <Trash2 className="h-5 w-5 text-red-500" />
+                                </button>
+                              </div>
+                            ) : (
+                              <div key={acc.name} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                                {CardContent}
+                                <button
+                                  className="p-2 rounded border border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                  onClick={() => {
+                                    setCurrentSocial(acc.name);
+                                    setShowSocialModal(true);
+                                  }}
+                                >
+                                  <LinkIcon className="h-5 w-5 text-gray-500" />
+                              </button>
                           </div>
-                        ))}
+                            )
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -556,14 +630,62 @@ const ProfilePage: React.FC = () => {
                         </button>
                         <button
                           className="px-4 py-2 rounded bg-indigo-600 text-white"
-                          onClick={() => {
-                            // Handle saving the link here
+                          onClick={async () => {
+                            if (user && currentSocial) {
+                              const socialKey = currentSocial.toLowerCase();
+                              const updatedLinks = {
+                                ...(user.socialLinks || {}),
+                                [socialKey]: socialLink
+                              };
+                              await updateUserSocialLinks(user.id, updatedLinks);
+                            }
                             setShowSocialModal(false);
                             setCurrentSocial(null);
                             setSocialLink('');
                           }}
                         >
                           Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Delete Confirmation Modal */}
+                {showDeleteModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+                      <h2 className="text-lg font-semibold mb-4">
+                        Are you really want to delete the {pendingDelete && ([
+                          { key: 'facebook', name: 'Facebook' },
+                          { key: 'twitter', name: 'Twitter' },
+                          { key: 'instagram', name: 'Instagram' },
+                          { key: 'dribbble', name: 'Dribbble' },
+                          { key: 'behance', name: 'Behance' },
+                        ].find(s => s.key === pendingDelete)?.name)} social connection?
+                      </h2>
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          className="px-4 py-2 rounded bg-green-500 text-white font-semibold hover:bg-green-600"
+                          onClick={() => {
+                            setShowDeleteModal(false);
+                            setPendingDelete(null);
+                          }}
+                        >
+                          No
+                        </button>
+                        <button
+                          className="px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700"
+                          onClick={async () => {
+                            if (user && pendingDelete) {
+                              const updatedLinks = { ...(user.socialLinks || {}), [pendingDelete]: '' };
+                              await updateUserSocialLinks(user.id, updatedLinks);
+                              setDisconnected(prev => ({ ...prev, [pendingDelete]: false }));
+                            }
+                            setShowDeleteModal(false);
+                            setPendingDelete(null);
+                          }}
+                        >
+                          Yes
                         </button>
                       </div>
                     </div>

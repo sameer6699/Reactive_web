@@ -35,10 +35,13 @@ export const getUser = async (req, res) => {
         message: 'User not found'
       });
     }
-    
+    const userObj = user.toObject();
+    userObj.id = userObj._id;
+    delete userObj._id;
+    delete userObj.password;
     res.status(200).json({
       success: true,
-      data: user
+      data: userObj
     });
   } catch (error) {
     res.status(500).json({
@@ -181,17 +184,14 @@ export const loginUser = async (req, res) => {
 // @access  Private
 export const updateUser = async (req, res) => {
   try {
-    const { email, firstName, lastName, role, isActive } = req.body;
-    
+    const { email, firstName, lastName, role, isActive, socialLinks } = req.body;
+    const updateFields = { email, firstName, lastName, role, isActive };
+    if (socialLinks) {
+      updateFields.socialLinks = socialLinks;
+    }
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      {
-        email,
-        firstName,
-        lastName,
-        role,
-        isActive
-      },
+      updateFields,
       { new: true, runValidators: true }
     ).select('-password');
     
@@ -201,11 +201,14 @@ export const updateUser = async (req, res) => {
         message: 'User not found'
       });
     }
-    
+    const userObj = user.toObject();
+    userObj.id = userObj._id;
+    delete userObj._id;
+    delete userObj.password;
     res.status(200).json({
       success: true,
       message: 'User updated successfully',
-      data: user
+      data: userObj
     });
   } catch (error) {
     res.status(500).json({
@@ -247,10 +250,13 @@ export const updateUserOnboarding = async (req, res) => {
         message: 'User not found'
       });
     }
-
+    const userObj = user.toObject();
+    userObj.id = userObj._id;
+    delete userObj._id;
+    delete userObj.password;
     res.status(200).json({
       success: true,
-      data: user
+      data: userObj
     });
   } catch (error) {
     console.error('Error in updateUserOnboarding:', error);

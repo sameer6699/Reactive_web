@@ -40,6 +40,13 @@ export interface User {
   templateInterests?: string[];
   preferredTheme?: 'light' | 'dark' | 'both' | 'no-preference';
   designStyle?: 'minimalist' | 'creative' | 'corporate' | 'modern';
+  socialLinks?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    dribbble?: string;
+    behance?: string;
+  };
 }
 
 export interface CartItem {
