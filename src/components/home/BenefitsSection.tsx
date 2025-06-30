@@ -88,7 +88,7 @@ const BenefitsSection: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Why Choose Reactive-Web?
+            Why Choose PixelForge?
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
             We provide more than just templates - we deliver complete solutions for your web development needs

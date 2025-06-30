@@ -7,14 +7,18 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
+import { useDarkMode } from '../../hooks/useDarkMode';
 
 const DashboardHeader: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useStore();
+  const { user, logout } = useStore();
+  const { isDark, toggleDarkMode } = useDarkMode();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [notifications] = useState([
@@ -26,6 +30,7 @@ const DashboardHeader: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const handleLogout = () => {
+    logout();
     localStorage.removeItem('user');
     navigate('/');
   };
@@ -63,6 +68,18 @@ const DashboardHeader: React.FC = () => {
 
         {/* Right Section */}
         <div className="flex items-center space-x-4">
+          {/* Dark Mode Toggle */}
+          <button 
+            onClick={toggleDarkMode}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+            aria-label="Toggle dark mode"
+          >
+            {isDark ? (
+              <Sun className="w-5 h-5 text-yellow-500" />
+            ) : (
+              <Moon className="w-5 h-5 text-gray-600" />
+            )}
+          </button>
           {/* Notifications */}
           <div className="relative">
             <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 relative">

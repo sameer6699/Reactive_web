@@ -10,7 +10,7 @@ const TestimonialsSection: React.FC = () => {
       role: 'CEO, TechStart',
       avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150',
       rating: 5,
-      content: 'Reactive-Web has completely transformed how we approach web development. The templates are not only beautiful but also incredibly well-coded and easy to customize.',
+      content: 'PixelForgehas completely transformed how we approach web development. The templates are not only beautiful but also incredibly well-coded and easy to customize.',
       company: 'TechStart Inc.'
     },
     {
@@ -37,7 +37,7 @@ const TestimonialsSection: React.FC = () => {
       role: 'Startup Founder',
       avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150',
       rating: 5,
-      content: 'Launched our startup website in record time thanks to Reactive-Web. The templates are production-ready and the performance is incredible.',
+      content: 'Launched our startup website in record time thanks to PixelForge. The templates are production-ready and the performance is incredible.',
       company: 'InnovateLab'
     }
   ];
@@ -74,7 +74,7 @@ const TestimonialsSection: React.FC = () => {
             What Our Customers Say
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Don't just take our word for it - hear from the developers and businesses who trust Reactive-Web
+            Don't just take our word for it - hear from the developers and businesses who trust PixelForge
           </p>
         </motion.div>
 
