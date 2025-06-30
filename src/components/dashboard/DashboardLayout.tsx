@@ -7,6 +7,7 @@ import { useHydrateUser, useStore } from '../../store/useStore';
 import MarketplaceTemplates from './MarketplaceTemplates';
 import OnboardingModal from './OnboardingModal';
 import { useState, useEffect } from 'react';
+import ProfilePage from './ProfilePage';
 
 const DashboardLayout: React.FC = () => {
   useHydrateUser();
@@ -58,7 +59,7 @@ const DashboardLayout: React.FC = () => {
             <Route path="/orders" element={<div className="p-6"><h1 className="text-2xl font-bold">Orders</h1></div>} />
             <Route path="/analytics" element={<div className="p-6"><h1 className="text-2xl font-bold">Analytics</h1></div>} />
             <Route path="/notifications" element={<div className="p-6"><h1 className="text-2xl font-bold">Notifications</h1></div>} />
-            <Route path="/profile" element={<div className="p-6"><h1 className="text-2xl font-bold">Profile</h1></div>} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1></div>} />
             <Route path="/marketplace/templates" element={<MarketplaceTemplates />} />
           </Routes>
