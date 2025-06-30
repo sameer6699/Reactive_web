@@ -17,7 +17,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       if (user) {
         try {
           const userData = JSON.parse(user);
-          if (userData && userData.token) {
+          if (userData) {
             setIsAuthenticated(true);
           } else {
             setIsAuthenticated(false);
