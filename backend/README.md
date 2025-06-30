@@ -194,7 +194,7 @@ The user registration system stores user data in the `user_registration` collect
    # Development mode with auto-restart
    npm run dev:server
    
-   # Production mode
+   # Production mode to run the server use the below command
    npm run server
    ```
 

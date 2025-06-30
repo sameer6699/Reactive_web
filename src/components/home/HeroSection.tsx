@@ -140,7 +140,7 @@ const HeroSection: React.FC = () => {
               <motion.div
                 animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -top-4 -left-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg"
+                className="absolute -top-4 -left-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg z-20"
               >
                 <div className="flex items-center space-x-2">
                   <Download className="w-5 h-5 text-green-500" />
@@ -152,7 +152,7 @@ const HeroSection: React.FC = () => {
               <motion.div
                 animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg"
+                className="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg z-20"
               >
                 <div className="flex items-center space-x-1 mb-1">
                   {[...Array(5)].map((_, i) => (
