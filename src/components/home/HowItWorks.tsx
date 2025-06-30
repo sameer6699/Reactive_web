@@ -151,7 +151,7 @@ const HowItWorks: React.FC = () => {
                 Ready to Build Something Amazing?
               </h3>
               <p className="text-xl mb-6 opacity-90">
-                Join thousands of developers who trust Reactive-Web for their projects
+                Join thousands of developers who trust PixelForgefor their projects
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}

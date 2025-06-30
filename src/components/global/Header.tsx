@@ -4,6 +4,9 @@ import { User, Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDarkMode } from '../../hooks/useDarkMode';
 import { useStore } from '../../store/useStore';
+import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import logo from '../img/typo-logo.png';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,11 +40,11 @@ const Header: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2"
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">R</span>
+              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center p-1">
+                <img src={logo} alt="Logo" className="h-full w-full object-contain" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                Reactive-Web
+                PixelForge
               </span>
             </motion.div>
           </div>
