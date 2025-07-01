@@ -26,6 +26,9 @@ type NotificationSettings = {
   newDevice: { email: boolean; browser: boolean; app: boolean };
 };
 
+// Define the type for permission keys
+type NotificationPermissionKey = 'templateReleases' | 'supportActivity' | 'promotions' | 'location' | 'push' | 'reviewReplies';
+
 const ProfilePage: React.FC = () => {
   const { user, updateUserSocialLinks } = useStore();
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connections'>('profile');
@@ -131,6 +134,19 @@ const ProfilePage: React.FC = () => {
       newDevice: { email: true, browser: false, app: false },
     });
     setNotificationFrequency("Only when I'm online");
+  };
+
+  // Add this state and handler at the top of the component:
+  const [notificationPermissions, setNotificationPermissions] = useState<Record<NotificationPermissionKey, boolean>>({
+    templateReleases: true,
+    supportActivity: true,
+    promotions: false,
+    location: false,
+    push: false,
+    reviewReplies: true,
+  });
+  const handlePermissionToggle = (key: NotificationPermissionKey) => {
+    setNotificationPermissions(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   useEffect(() => {
@@ -464,56 +480,34 @@ const ProfilePage: React.FC = () => {
             )}
             {activeTab === 'notifications' && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
-                <p className="text-gray-500 text-sm mb-6">We need permission from your browser to show notifications. <button className="text-purple-500 hover:underline" onClick={handleRequestPermission}>Request Permission</button></p>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-left border-separate border-spacing-y-2">
-                    <thead>
-                      <tr className="bg-gray-50 dark:bg-gray-900">
-                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">TIME</th>
-                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">EMAIL</th>
-                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">BROWSER</th>
-                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">APP</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-800">
-                      {[
-                        { label: 'New for you', key: 'newForYou' },
-                        { label: 'Account activity', key: 'accountActivity' },
-                        { label: 'A new browser used to sign in', key: 'newBrowser' },
-                        { label: 'A new device is linked', key: 'newDevice' },
-                      ].map((row, idx) => (
-                        <tr key={row.key} className="border-b border-gray-100 dark:border-gray-700">
-                          <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-200">{row.label}</td>
-                          {(['email', 'browser', 'app'] as const).map(channel => (
-                            <td key={channel} className="py-3 px-4">
-                              <input
-                                type="checkbox"
-                                className="accent-purple-500 w-5 h-5 rounded border-gray-300 focus:ring-0"
-                                checked={notificationSettings[row.key as keyof NotificationSettings][channel] || false}
-                                onChange={() => handleNotificationChange(row.key as keyof NotificationSettings, channel)}
-                              />
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <p className="text-gray-500 text-sm mb-6">We need permission from your browser to show notifications. <button className="text-indigo-600 hover:underline" onClick={handleRequestPermission}>Request Permission</button></p>
+                <div className="space-y-6">
+                  {([
+                    { label: 'New Template Releases', key: 'templateReleases' },
+                    { label: 'Support & Activity Notifications', key: 'supportActivity' },
+                    { label: 'Promotions & Discount Alerts', key: 'promotions' },
+                    { label: 'Location Access Permission', key: 'location' },
+                    { label: 'Push Notifications Permission', key: 'push' },
+                    { label: 'Support & Review Replies', key: 'reviewReplies' },
+                  ] as { label: string; key: NotificationPermissionKey }[]).map((perm) => (
+                    <div key={perm.key} className="flex items-center justify-between py-2 px-2 rounded-lg bg-gray-50 dark:bg-gray-900">
+                      <span className="text-gray-800 dark:text-gray-200 font-medium">{perm.label}</span>
+                      <button
+                        type="button"
+                        onClick={() => handlePermissionToggle(perm.key)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${notificationPermissions[perm.key] ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'}`}
+                        aria-pressed={notificationPermissions[perm.key]}
+                      >
+                        <span className="sr-only">Toggle {perm.label}</span>
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ring-0 ${notificationPermissions[perm.key] ? 'translate-x-5' : 'translate-x-1'}`}
+                        ></span>
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                <div className="mt-8 mb-4">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">When should we send you notifications?</label>
-                  <select
-                    className="w-full border-2 border-purple-300 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                    value={notificationFrequency}
-                    onChange={e => setNotificationFrequency(e.target.value)}
-                  >
-                    <option>Only when I'm online</option>
-                    <option>Anytime</option>
-                    <option>Never</option>
-                  </select>
-                </div>
-                <div className="flex items-center mt-6">
-                  <button className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-lg shadow mr-3" onClick={handleSaveNotifications}>Save Changes</button>
-                  <button className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg shadow" onClick={handleResetNotifications}>Reset</button>
+                <div className="flex items-center mt-8">
+                  <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition-colors duration-200" onClick={handleSaveNotifications}>Save Changes</button>
                 </div>
               </div>
             )}
