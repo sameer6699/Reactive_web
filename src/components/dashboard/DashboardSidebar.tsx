@@ -13,7 +13,8 @@ import {
   BarChart3,
   Bell,
   Grid,
-  Layers
+  Layers,
+  ChevronDown
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ interface DashboardSidebarProps {
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onToggle }) => {
   const navigate = useNavigate();
   const [activeItem, setActiveItem] = useState('dashboard');
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const menuItems = [
     {
@@ -32,6 +34,12 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
       label: 'Dashboard',
       icon: <LayoutDashboard className="w-5 h-5" />,
       path: '/dashboard'
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      icon: <BarChart3 className="w-5 h-5" />,
+      path: '/dashboard/analytics'
     },
     {
       id: 'templates',
@@ -44,30 +52,6 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
       label: 'Orders',
       icon: <ShoppingCart className="w-5 h-5" />,
       path: '/dashboard/orders'
-    },
-    {
-      id: 'analytics',
-      label: 'Analytics',
-      icon: <BarChart3 className="w-5 h-5" />,
-      path: '/dashboard/analytics'
-    },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: <Bell className="w-5 h-5" />,
-      path: '/dashboard/notifications'
-    },
-    {
-      id: 'profile',
-      label: 'Profile',
-      icon: <User className="w-5 h-5" />,
-      path: '/dashboard/profile'
-    },
-    {
-      id: 'settings',
-      label: 'Settings',
-      icon: <Settings className="w-5 h-5" />,
-      path: '/dashboard/settings'
     }
   ];
 
@@ -148,8 +132,8 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
 
       {/* Navigation Menu */}
       <nav className="p-4 space-y-2">
-        {/* Dashboard item first */}
-        {menuItems.slice(0, 1).map((item) => (
+        {/* Dashboard and Analytics first */}
+        {menuItems.slice(0, 2).map((item) => (
           <motion.button
             key={item.id}
             onClick={() => handleItemClick(item.id, item.path)}
@@ -216,35 +200,57 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isCollapsed, onTogg
           ))}
         </div>
         {/* The rest of the menu items */}
-        {menuItems.slice(1).map((item) => (
-          <motion.button
-            key={item.id}
-            onClick={() => handleItemClick(item.id, item.path)}
-            className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-              activeItem === item.id
-                ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
-            }`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className={`flex-shrink-0 ${activeItem === item.id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}`}>
-              {item.icon}
-            </div>
-            <AnimatePresence mode="wait">
-              {!isCollapsed && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="font-medium text-sm"
+        {menuItems.slice(2).map((item, idx) => (
+          <React.Fragment key={item.id}>
+            <motion.button
+              onClick={() => handleItemClick(item.id, item.path)}
+              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                activeItem === item.id
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className={`flex-shrink-0 ${activeItem === item.id ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300'}`}>
+                {item.icon}
+              </div>
+              <AnimatePresence mode="wait">
+                {!isCollapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="font-medium text-sm"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
+            {/* Insert Help dropdown after Orders */}
+            {item.id === 'orders' && (
+              <div className="relative mt-2">
+                <button
+                  type="button"
+                  onClick={() => setHelpOpen((open) => !open)}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white font-medium text-sm"
                 >
-                  {item.label}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+                  <span>Help</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 text-primary-600 dark:text-primary-400 ${helpOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {helpOpen && !isCollapsed && (
+                  <div className="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 flex flex-col">
+                    <button className="w-full text-left px-5 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Blog</button>
+                    <button className="w-full text-left px-5 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Hire Us</button>
+                    <button className="w-full text-left px-5 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Contact Us</button>
+                    <button className="w-full text-left px-5 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">Affiliation Program</button>
+                  </div>
+                )}
+              </div>
+            )}
+          </React.Fragment>
         ))}
       </nav>
 
