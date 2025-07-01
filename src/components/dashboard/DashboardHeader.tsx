@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -26,8 +26,20 @@ const DashboardHeader: React.FC = () => {
     { id: 2, message: 'Order #1234 completed', time: '1 hour ago', read: false },
     { id: 3, message: 'Weekly report available', time: '3 hours ago', read: true },
   ]);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  useEffect(() => {
+    if (!showUserMenu) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showUserMenu]);
 
   const handleLogout = () => {
     logout();
@@ -50,17 +62,17 @@ const DashboardHeader: React.FC = () => {
     >
       <div className="flex items-center justify-between">
         {/* Left Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 flex-1 max-w-xl">
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="relative">
-            <div className="relative">
+          <form onSubmit={handleSearch} className="relative w-full">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search templates, orders, analytics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-80 pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                className="w-full max-w-md pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
               />
             </div>
           </form>
@@ -97,7 +109,7 @@ const DashboardHeader: React.FC = () => {
           </div>
 
           {/* User Menu */}
-          <div className="relative">
+          <div className="relative" ref={userMenuRef}>
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
@@ -107,7 +119,6 @@ const DashboardHeader: React.FC = () => {
               </div>
               <div className="hidden md:block text-left">
                 <p className="text-sm font-medium text-gray-900 dark:text-white">{(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : (user?.name || 'User')}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'user@example.com'}</p>
               </div>
             </button>
 

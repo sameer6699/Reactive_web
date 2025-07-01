@@ -1,10 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { mockTemplates } from '../../data/mockData';
+import { ChevronDown } from 'lucide-react';
+
+const FILTERS = ['All', 'Free', 'Premium'];
+const SORT_OPTIONS = ['Newest', 'Oldest', 'Popular'];
 
 const MarketplaceTemplates: React.FC = () => {
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [sort, setSort] = useState('Newest');
+  const [sortOpen, setSortOpen] = useState(false);
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6 dark:text-white">All Templates</h1>
+      <div className="bg-white dark:bg-gray-800 rounded-xl px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 shadow">
+        <div className="flex items-center gap-4 flex-wrap">
+          <h1 className="text-2xl font-bold dark:text-white">All Templates</h1>
+          <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+            <span className="font-bold">{mockTemplates.length}</span> Items
+          </span>
+        </div>
+        <div className="flex items-center gap-4 mt-4 sm:mt-0 flex-wrap">
+          <div className="flex border rounded-lg overflow-hidden divide-x divide-gray-200 dark:divide-gray-700">
+            {FILTERS.map(f => (
+              <button
+                key={f}
+                onClick={() => setActiveFilter(f)}
+                className={`px-4 py-2 text-sm font-semibold focus:outline-none transition-colors duration-150 ${
+                  activeFilter === f
+                    ? 'bg-primary-600 text-white dark:bg-primary-500'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+                style={{ minWidth: 80 }}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setSortOpen((o) => !o)}
+              className="flex items-center px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium text-sm shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none min-w-[110px]"
+            >
+              {sort}
+              <ChevronDown className="w-4 h-4 ml-2" />
+            </button>
+            {sortOpen && (
+              <div className="absolute right-0 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                {SORT_OPTIONS.map(option => (
+                  <button
+                    key={option}
+                    onClick={() => { setSort(option); setSortOpen(false); }}
+                    className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 ${option === sort ? 'text-primary-600 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'}`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {mockTemplates.map(template => (
           <div
