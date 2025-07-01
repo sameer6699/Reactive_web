@@ -52,6 +52,7 @@ export interface User {
     behance?: string;
     [key: string]: string | undefined;
   };
+  organization?: string;
 }
 
 export interface CartItem {

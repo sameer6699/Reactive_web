@@ -17,6 +17,7 @@ import twitterLogo from '../img/logo/twitter-logo.png';
 import dribbleLogo from '../img/logo/dribble-logo.png';
 import behanceLogo from '../img/logo/behance-logo.png';
 import './ProfilePage.css'; // For animation styles
+import ReactFlagsSelect from 'react-flags-select';
 
 // Add this type above the component
 type NotificationSettings = {
@@ -148,6 +149,17 @@ const ProfilePage: React.FC = () => {
   const handlePermissionToggle = (key: NotificationPermissionKey) => {
     setNotificationPermissions(prev => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Add this state for organization name
+  const [organization, setOrganization] = useState(user?.organization || '');
+
+  // Add to the component state:
+  const [selectedCountry, setSelectedCountry] = React.useState('US');
+  const [mobile, setMobile] = React.useState('');
+  const countryCodes: { [key: string]: string } = {
+    AF: '+93', AL: '+355', DZ: '+213', AS: '+1-684', AD: '+376', AO: '+244', AI: '+1-264', AQ: '+672', AG: '+1-268', AR: '+54', AM: '+374', AW: '+297', AU: '+61', AT: '+43', AZ: '+994', BS: '+1-242', BH: '+973', BD: '+880', BB: '+1-246', BY: '+375', BE: '+32', BZ: '+501', BJ: '+229', BM: '+1-441', BT: '+975', BO: '+591', BA: '+387', BW: '+267', BR: '+55', IO: '+246', VG: '+1-284', BN: '+673', BG: '+359', BF: '+226', BI: '+257', KH: '+855', CM: '+237', CA: '+1', CV: '+238', KY: '+1-345', CF: '+236', TD: '+235', CL: '+56', CN: '+86', CX: '+61', CC: '+61', CO: '+57', KM: '+269', CK: '+682', CR: '+506', HR: '+385', CU: '+53', CW: '+599', CY: '+357', CZ: '+420', CD: '+243', DK: '+45', DJ: '+253', DM: '+1-767', DO: '+1-809', EC: '+593', EG: '+20', SV: '+503', GQ: '+240', ER: '+291', EE: '+372', SZ: '+268', ET: '+251', FK: '+500', FO: '+298', FJ: '+679', FI: '+358', FR: '+33', GF: '+594', PF: '+689', GA: '+241', GM: '+220', GE: '+995', DE: '+49', GH: '+233', GI: '+350', GR: '+30', GL: '+299', GD: '+1-473', GP: '+590', GU: '+1-671', GT: '+502', GG: '+44', GN: '+224', GW: '+245', GY: '+592', HT: '+509', HN: '+504', HK: '+852', HU: '+36', IS: '+354', IN: '+91', ID: '+62', IR: '+98', IQ: '+964', IE: '+353', IM: '+44', IL: '+972', IT: '+39', CI: '+225', JM: '+1-876', JP: '+81', JE: '+44', JO: '+962', KZ: '+7', KE: '+254', KI: '+686', XK: '+383', KW: '+965', KG: '+996', LA: '+856', LV: '+371', LB: '+961', LS: '+266', LR: '+231', LY: '+218', LI: '+423', LT: '+370', LU: '+352', MO: '+853', MG: '+261', MW: '+265', MY: '+60', MV: '+960', ML: '+223', MT: '+356', MH: '+692', MQ: '+596', MR: '+222', MU: '+230', YT: '+262', MX: '+52', FM: '+691', MD: '+373', MC: '+377', MN: '+976', ME: '+382', MS: '+1-664', MA: '+212', MZ: '+258', MM: '+95', NA: '+264', NR: '+674', NP: '+977', NL: '+31', NC: '+687', NZ: '+64', NI: '+505', NE: '+227', NG: '+234', NU: '+683', NF: '+672', KP: '+850', MK: '+389', MP: '+1-670', NO: '+47', OM: '+968', PK: '+92', PW: '+680', PS: '+970', PA: '+507', PG: '+675', PY: '+595', PE: '+51', PH: '+63', PN: '+64', PL: '+48', PT: '+351', PR: '+1-787', QA: '+974', CG: '+242', RE: '+262', RO: '+40', RU: '+7', RW: '+250', BL: '+590', SH: '+290', KN: '+1-869', LC: '+1-758', MF: '+590', PM: '+508', VC: '+1-784', WS: '+685', SM: '+378', ST: '+239', SA: '+966', SN: '+221', RS: '+381', SC: '+248', SL: '+232', SG: '+65', SX: '+1-721', SK: '+421', SI: '+386', SB: '+677', SO: '+252', ZA: '+27', KR: '+82', SS: '+211', ES: '+34', LK: '+94', SD: '+249', SR: '+597', SJ: '+47', SE: '+46', CH: '+41', SY: '+963', TW: '+886', TJ: '+992', TZ: '+255', TH: '+66', TL: '+670', TG: '+228', TK: '+690', TO: '+676', TT: '+1-868', TN: '+216', TR: '+90', TM: '+993', TC: '+1-649', TV: '+688', VI: '+1-340', UG: '+256', UA: '+380', AE: '+971', GB: '+44', US: '+1', UY: '+598', UZ: '+998', VU: '+678', VA: '+39', VE: '+58', VN: '+84', WF: '+681', EH: '+212', YE: '+967', ZM: '+260', ZW: '+263'
+  };
+  const selectedCountryCode = countryCodes[selectedCountry] || '';
 
   useEffect(() => {
     if (activeTab === 'notifications' && 'Notification' in window) {
@@ -332,7 +344,7 @@ const ProfilePage: React.FC = () => {
                     <label htmlFor="organization" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Organization
                     </label>
-                    <div className="relative">
+                    <div className="relative flex items-center">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Building className="h-5 w-5 text-gray-400" />
                       </div>
@@ -340,10 +352,21 @@ const ProfilePage: React.FC = () => {
                         type="text"
                         name="organization"
                         id="organization"
-                        defaultValue="ThemeSelection"
-                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                        value={organization}
+                        onChange={e => setOrganization(e.target.value)}
+                        className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
                         placeholder="Your organization"
                       />
+                      {organization && (
+                        <button
+                          type="button"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 focus:outline-none"
+                          onClick={() => setOrganization('')}
+                          title="Remove organization"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -406,37 +429,53 @@ const ProfilePage: React.FC = () => {
                     <label htmlFor="country" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Country
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Globe className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <select
-                        id="country"
-                        name="country"
-                        autoComplete="country-name"
-                        className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 appearance-none"
-                      >
-                        <option>United States</option>
-                        <option>Canada</option>
-                        <option>Mexico</option>
-                      </select>
-                    </div>
+                    <ReactFlagsSelect
+                      selected={selectedCountry}
+                      onSelect={code => setSelectedCountry(code)}
+                      searchable
+                      fullWidth
+                      placeholder="Your country"
+                      id="country"
+                      className="w-full"
+                      selectButtonClassName="block w-full pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 appearance-none"
+                      optionsSize={16}
+                      selectedSize={16}
+                      showSelectedLabel
+                      showOptionLabel
+                      showSecondarySelectedLabel={false}
+                      showSecondaryOptionLabel={false}
+                    />
                   </div>
 
-                  {/* Language */}
+                  {/* Mobile Number */}
                   <div>
-                    <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      Language
+                    <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Mobile Number
                     </label>
-                     <div className="relative">
-                      <select
-                        id="language"
-                        name="language"
-                        className="block w-full pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 appearance-none"
-                      >
-                        <option>English</option>
-                        <option>Spanish</option>
-                      </select>
+                    <div className="flex w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-transparent transition-all duration-200 overflow-hidden">
+                      <div className="flex items-center px-3 bg-white dark:bg-gray-800">
+                        <span className="mr-2">
+                          <img
+                            src={`https://flagcdn.com/24x18/${selectedCountry.toLowerCase()}.png`}
+                            alt={selectedCountry}
+                            className="inline-block rounded-sm"
+                            width={24}
+                            height={18}
+                          />
+                        </span>
+                        <span className="text-gray-700 dark:text-gray-200 font-medium whitespace-nowrap">{selectedCountryCode}</span>
+                        <span className="mx-2 text-gray-300">|</span>
+                      </div>
+                      <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        autoComplete="tel"
+                        value={mobile}
+                        onChange={e => setMobile(e.target.value)}
+                        className="flex-1 py-2.5 pr-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none border-0"
+                        placeholder="Your mobile number"
+                      />
                     </div>
                   </div>
 
