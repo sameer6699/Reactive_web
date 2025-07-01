@@ -18,6 +18,14 @@ import dribbleLogo from '../img/logo/dribble-logo.png';
 import behanceLogo from '../img/logo/behance-logo.png';
 import './ProfilePage.css'; // For animation styles
 
+// Add this type above the component
+type NotificationSettings = {
+  newForYou: { email: boolean; browser: boolean; app: boolean };
+  accountActivity: { email: boolean; browser: boolean; app: boolean };
+  newBrowser: { email: boolean; browser: boolean; app: boolean };
+  newDevice: { email: boolean; browser: boolean; app: boolean };
+};
+
 const ProfilePage: React.FC = () => {
   const { user, updateUserSocialLinks } = useStore();
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications' | 'connections'>('profile');
@@ -82,6 +90,49 @@ const ProfilePage: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
+  // Add these state and handler functions at the top of the component:
+  const [coverImage, setCoverImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setCoverImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfileImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  // Notification settings state and handlers
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
+    newForYou: { email: true, browser: true, app: true },
+    accountActivity: { email: true, browser: true, app: true },
+    newBrowser: { email: true, browser: true, app: false },
+    newDevice: { email: true, browser: false, app: false },
+  });
+  const [notificationFrequency, setNotificationFrequency] = useState("Only when I'm online");
+  const handleNotificationChange = (rowKey: keyof NotificationSettings, channel: 'email' | 'browser' | 'app') => {
+    setNotificationSettings(prev => ({
+      ...prev,
+      [rowKey]: { ...prev[rowKey], [channel]: !prev[rowKey][channel] }
+    }));
+  };
+  const handleSaveNotifications = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // Save logic here
+  };
+  const handleResetNotifications = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setNotificationSettings({
+      newForYou: { email: true, browser: true, app: true },
+      accountActivity: { email: true, browser: true, app: true },
+      newBrowser: { email: true, browser: true, app: false },
+      newDevice: { email: true, browser: false, app: false },
+    });
+    setNotificationFrequency("Only when I'm online");
+  };
+
   useEffect(() => {
     if (activeTab === 'notifications' && 'Notification' in window) {
       setNotificationStatus(Notification.permission);
@@ -118,13 +169,47 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 sm:p-10 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Account Settings</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your account settings and set e-mail preferences.</p>
+    <div className="p-10 sm:p-16 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        {/* Cover Image Section */}
+        <div className="relative w-full h-56 sm:h-72 bg-gray-200 dark:bg-gray-700 rounded-t-lg overflow-hidden mb-16">
+          <img
+            src={coverImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'}
+            alt="Cover"
+            className="object-cover w-full h-full"
+          />
+          <label htmlFor="cover-upload" className="absolute bottom-4 right-4 bg-white dark:bg-gray-800 bg-opacity-80 dark:bg-opacity-80 px-3 py-1 rounded shadow cursor-pointer text-sm font-medium hover:bg-opacity-100 transition">
+            Change Cover
+            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={handleCoverChange} />
+          </label>
         </div>
-
+        {/* Profile Image Overlapping Cover */}
+        <div className="relative flex items-center -mt-20 mb-8 pl-8">
+          <div className="relative z-10">
+            <img
+              className="h-32 w-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
+              src={profileImage || 'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80'}
+              alt="Profile"
+            />
+            <label
+              htmlFor="photo-upload"
+              className="absolute bottom-2 right-2 flex items-center justify-center h-8 w-8 bg-indigo-600 rounded-full text-white cursor-pointer hover:bg-indigo-700 shadow"
+            >
+              <Camera className="h-5 w-5" />
+              <input id="photo-upload" name="photo-upload" type="file" className="sr-only" onChange={handleProfileChange} />
+            </label>
+          </div>
+          {/* User Info (optional, can be expanded) */}
+          <div className="ml-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{user?.firstName} {user?.lastName}</h2>
+            <div className="flex items-center space-x-4 mt-2 text-gray-500 dark:text-gray-400">
+              <span className="flex items-center"><User className="h-4 w-4 mr-1" /> UX Designer</span>
+              <span className="flex items-center"><MapPin className="h-4 w-4 mr-1" /> Vatican City</span>
+              <span className="flex items-center"><Clock className="h-4 w-4 mr-1" /> April 2021</span>
+            </div>
+          </div>
+        </div>
+        {/* Main Profile Card */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
           {/* Tabs */}
           <div className="border-b border-gray-200 dark:border-gray-700">
@@ -158,39 +243,6 @@ const ProfilePage: React.FC = () => {
           <div className="p-6">
             {activeTab === 'profile' && (
               <>
-                {/* Profile photo section */}
-                <div className="flex items-center space-x-5">
-                  <div className="relative">
-                    <img
-                      className="h-24 w-24 rounded-full object-cover"
-                      src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=80"
-                      alt="Profile"
-                    />
-                    <label
-                      htmlFor="photo-upload"
-                      className="absolute bottom-0 right-0 flex items-center justify-center h-8 w-8 bg-indigo-600 rounded-full text-white cursor-pointer hover:bg-indigo-700"
-                    >
-                      <Camera className="h-5 w-5" />
-                      <input id="photo-upload" name="photo-upload" type="file" className="sr-only" />
-                    </label>
-                  </div>
-                  <div>
-                    <button
-                      type="button"
-                      className="rounded-md bg-white dark:bg-gray-700 px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
-                    >
-                      Change
-                    </button>
-                    <button
-                      type="button"
-                      className="ml-3 rounded-md bg-transparent px-3.5 py-2.5 text-sm font-semibold text-gray-900 dark:text-white"
-                    >
-                      Reset
-                    </button>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Allowed JPG, GIF or PNG. Max size of 800K</p>
-                  </div>
-                </div>
-
                 {/* Form */}
                 <form className="mt-8 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                   {/* First Name */}
@@ -411,32 +463,58 @@ const ProfilePage: React.FC = () => {
               </>
             )}
             {activeTab === 'notifications' && (
-              <div className="max-w-lg mx-auto">
-                <h2 className="text-xl font-semibold mb-4">Notification Permissions</h2>
-                <p className="mb-2">Control your browser notification settings for this app.</p>
-                <div className="mb-4">
-                  <span className="font-medium">Current status: </span>
-                  <span className={
-                    notificationStatus === 'granted' ? 'text-green-600' : notificationStatus === 'denied' ? 'text-red-600' : 'text-yellow-600'
-                  }>
-                    {notificationStatus || 'Not supported'}
-                  </span>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
+                <p className="text-gray-500 text-sm mb-6">We need permission from your browser to show notifications. <button className="text-purple-500 hover:underline" onClick={handleRequestPermission}>Request Permission</button></p>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-left border-separate border-spacing-y-2">
+                    <thead>
+                      <tr className="bg-gray-50 dark:bg-gray-900">
+                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">TIME</th>
+                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">EMAIL</th>
+                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">BROWSER</th>
+                        <th className="py-3 px-4 text-xs font-semibold text-gray-500">APP</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-gray-800">
+                      {[
+                        { label: 'New for you', key: 'newForYou' },
+                        { label: 'Account activity', key: 'accountActivity' },
+                        { label: 'A new browser used to sign in', key: 'newBrowser' },
+                        { label: 'A new device is linked', key: 'newDevice' },
+                      ].map((row, idx) => (
+                        <tr key={row.key} className="border-b border-gray-100 dark:border-gray-700">
+                          <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-200">{row.label}</td>
+                          {(['email', 'browser', 'app'] as const).map(channel => (
+                            <td key={channel} className="py-3 px-4">
+                              <input
+                                type="checkbox"
+                                className="accent-purple-500 w-5 h-5 rounded border-gray-300 focus:ring-0"
+                                checked={notificationSettings[row.key as keyof NotificationSettings][channel] || false}
+                                onChange={() => handleNotificationChange(row.key as keyof NotificationSettings, channel)}
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                {notificationStatus !== 'granted' && (
-                  <button
-                    type="button"
-                    onClick={handleRequestPermission}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                <div className="mt-8 mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">When should we send you notifications?</label>
+                  <select
+                    className="w-full border-2 border-purple-300 rounded-lg px-4 py-3 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                    value={notificationFrequency}
+                    onChange={e => setNotificationFrequency(e.target.value)}
                   >
-                    Request Notification Permission
-                  </button>
-                )}
-                {notificationStatus === 'granted' && (
-                  <div className="mt-4 text-green-600">Notifications are enabled!</div>
-                )}
-                {notificationStatus === 'denied' && (
-                  <div className="mt-4 text-red-600">Notifications are blocked. Please enable them in your browser settings.</div>
-                )}
+                    <option>Only when I'm online</option>
+                    <option>Anytime</option>
+                    <option>Never</option>
+                  </select>
+                </div>
+                <div className="flex items-center mt-6">
+                  <button className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-lg shadow mr-3" onClick={handleSaveNotifications}>Save Changes</button>
+                  <button className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg shadow" onClick={handleResetNotifications}>Reset</button>
+                </div>
               </div>
             )}
             {activeTab === 'connections' && (
