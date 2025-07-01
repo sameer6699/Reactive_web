@@ -24,13 +24,14 @@ export interface Template {
 
 export interface User {
   id: string;
-  name: string;
+  name?: string;
   email: string;
-  avatar: string;
-  isPremium: boolean;
-  purchasedTemplates: string[];
+  avatar?: string;
+  isPremium?: boolean;
+  purchasedTemplates?: string[];
   firstName?: string;
   lastName?: string;
+  fullName?: string;
   onboardingComplete?: boolean;
   userType?: 'developer' | 'designer' | 'startup-founder' | 'business-owner' | 'freelancer' | 'agency' | 'other';
   userTypeOther?: string;
@@ -40,12 +41,16 @@ export interface User {
   templateInterests?: string[];
   preferredTheme?: 'light' | 'dark' | 'both' | 'no-preference';
   designStyle?: 'minimalist' | 'creative' | 'corporate' | 'modern';
+  role?: string;
+  occupation?: string;
+  createdAt?: string;
   socialLinks?: {
     facebook?: string;
     twitter?: string;
     instagram?: string;
     dribbble?: string;
     behance?: string;
+    [key: string]: string | undefined;
   };
 }
 

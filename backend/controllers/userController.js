@@ -166,7 +166,8 @@ export const loginUser = async (req, res) => {
         role: user.role,
         createdAt: user.createdAt,
         onboardingComplete: user.onboardingComplete,
-        occupation: user.occupation
+        occupation: user.occupation,
+        socialLinks: user.socialLinks || {}
       }
     });
   } catch (error) {
